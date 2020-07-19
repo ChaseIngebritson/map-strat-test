@@ -1,9 +1,6 @@
 <template>
   <div class="home">
-    <MapboxMap
-      :center="[-74.0066, 40.7135]"
-      class="map"
-    />
+    <MapboxMap class="map" />
   </div>
 </template>
 
