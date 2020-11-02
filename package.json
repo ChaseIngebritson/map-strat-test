@@ -19,8 +19,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy-windows": "node scripts/gh-pages-deploy-windows.js",
-    "deploy-unix": "node scripts/gh-pages-deploy-unix.js"
+    "deploy": "node scripts/gh-pages-deploy.js"
   },
   "eslintConfig": {
     "extends": [
@@ -44,6 +43,6 @@
     "@testing-library/jest-dom": "^5.11.5",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "execa": "^4.1.0"
+    "gh-pages": "^3.1.0"
   }
 }
