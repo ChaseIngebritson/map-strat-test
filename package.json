@@ -2,6 +2,7 @@
   "name": "map-strat-test",
   "version": "0.1.0",
   "private": false,
+  "homepage": "https://chaseingebritson.github.io/map-strat-test/",
   "dependencies": {
     "boardgame.io": "^0.41.1",
     "deck.gl": "^8.3.4",
@@ -19,6 +20,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "predeploy": "npm run build",
     "deploy": "node scripts/gh-pages-deploy.js"
   },
   "eslintConfig": {
