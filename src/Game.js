@@ -1,31 +1,48 @@
-import { INVALID_MOVE } from 'boardgame.io/core';
+import { Debug } from 'boardgame.io/debug';
 
 import SfBikeParkingData from './data/sf-bike-parking.json';
-
+import { createPlayer, placeUnit, moveUnit } from './utils'
+    
 const data = SfBikeParkingData.map(locationIn => {
-  const location = locationIn
+  const location = { ...locationIn }
   location.occupied = null
   return location
 })
 
 const Game = {
-  setup: () => ({ 
-    cells: data
-  }),
+  setup: (G) => {
+    const players = []
+    for (let i=0; i < G.numPlayers; i++) {
+      players[i] = createPlayer(i)
+    }
+
+    return { 
+      cells: data,
+      players
+    }
+  },
 
   turn: {
     moveLimit: 1,
   },
 
-  moves: {
-    clickCell: (G, ctx, id) => {
-      if (G.cells[id].occupied !== null) {
-        return INVALID_MOVE;
+  phases: {
+    setup: {
+      start: true,
+      next: 'play',
+      moves: { placeUnit },
+      endIf: (G, ctx) => {
+        // End the phase if every player has placed a piece
+        return G.players.every(player => Object.keys(player.pieces).length > 0)
       }
-
-      G.cells[id].occupied = ctx.currentPlayer;
     },
+
+    play: {
+      moves: { moveUnit }
+    }
   },
+
+  debug: { impl: Debug }
 }
 
 export default Game

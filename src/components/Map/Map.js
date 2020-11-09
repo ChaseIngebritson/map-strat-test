@@ -7,6 +7,7 @@ import { registerLoaders } from '@loaders.gl/core';
 import { HexagonLayer } from '@deck.gl/aggregation-layers';
 
 import './Map.css';
+import { createScenegraphLayer } from '../../utils/layer'
 
 registerLoaders(GLTFLoader);
 
@@ -20,35 +21,22 @@ const INITIAL_VIEW_STATE = {
   pitch: 45
 };
 
-function createScenegraphLayer (
-  layerId,
-  scenegraphModelUrl,
-  coordinates,
-  sizeScale
-) {
-  return {
-    id: layerId,
-    scenegraph: scenegraphModelUrl,
-    data: [{ position: coordinates, size: 100 }],
-    sizeScale,
-    _lighting: 'pbr',
-    getPosition: d => d.position,
-    getOrientation: [0, 330, 90],
-    getTranslation: [0, 0, 0],
-    getScale: [1, 1, 1],
-    pickable: true,
-    onClick: (layer, $event) => {
-      console.log('triggered scenegraphLayer click', layer)
-      return true
-    }
-  }
-}
-
 function Map (props) {
   const [model1Coords, setModel1Coords] = useState([INITIAL_VIEW_STATE.longitude, INITIAL_VIEW_STATE.latitude]);
   const [model2Coords, setModel2Coords] = useState([INITIAL_VIEW_STATE.longitude, INITIAL_VIEW_STATE.latitude]);
 
-  // console.log(props)
+  function setCoords (coords) {
+    switch (props.ctx.currentPlayer) {
+      case '0':
+        setModel1Coords(coords)
+        break
+      case '1':
+        setModel2Coords(coords)
+        break
+      default:
+        console.error('Unknown player')
+    }
+  }
 
   const threeDLayer = {
     id: '3d-buildings',
@@ -95,19 +83,20 @@ function Map (props) {
     opacity: 0.3,
     getPosition: d => d.COORDINATES,
     onClick: (layer, $event) => {
-      console.log('triggered hexagonLayer click', layer)
-      props.moves.clickCell(layer.index);
-
-      switch (props.ctx.currentPlayer) {
-        case '0':
-          setModel1Coords(layer.object.position)
+      switch (props.ctx.phase) {
+        case 'setup':
+          const test = props.moves.placeUnit(layer.index)
+          console.log(test)
           break
-        case '1':
-          setModel2Coords(layer.object.position)
+        case 'play':
+          // Replace with active unit functionality
+          const activeUnit = Object.keys(props.G.players[props.ctx.currentPlayer].pieces)[0]
+
+          props.moves.moveUnit(activeUnit, layer.index)
+          setCoords(layer.object.position)
           break
         default:
-          console.log('invalid player')
-          break
+          console.error('Unknown phase', props.ctx.phase)
       }
       
       return true
