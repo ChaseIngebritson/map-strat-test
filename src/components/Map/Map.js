@@ -5,10 +5,14 @@ import { ScenegraphLayer } from '@deck.gl/mesh-layers'
 import { GLTFLoader } from '@loaders.gl/gltf';
 import { registerLoaders } from '@loaders.gl/core';
 import { HexagonLayer } from '@deck.gl/aggregation-layers';
+import { ToastContainer } from 'react-toastify';
+
+import { createScenegraphLayer } from '../../utils/layer'
+import { UNIT_MODEL_MAP } from '../../constants/models'
+
+import 'react-toastify/dist/ReactToastify.css';
 
 import './Map.css';
-import { createScenegraphLayer } from '../../utils/layer'
-import { UNIT_PAWN_MODEL, UNIT_MODEL_MAP } from '../../constants/models'
 
 registerLoaders(GLTFLoader);
 
@@ -118,6 +122,7 @@ function Map (props) {
             <ScenegraphLayer key={piece.id} {...piece} coordinates={piece.data[0].coordinates} />
           ))}
         </DeckGL>
+        <ToastContainer />
     </div>
   );
 }

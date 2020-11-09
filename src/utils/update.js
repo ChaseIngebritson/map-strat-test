@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 import { INVALID_MOVE } from 'boardgame.io/core';
+import { toast } from 'react-toastify';
 
 import { UNIT_PAWN } from '../constants/units'
 
@@ -18,7 +19,12 @@ function placeUnit (G, ctx, coordinates) {
 }
 
 function moveUnit (G, ctx, unit, cell, coordinates) {
-  if (G.cells[cell].occupied !== null) return INVALID_MOVE
+  if (G.cells[cell].occupied !== null) {
+    toast.error(INVALID_MOVE, {
+      position: toast.POSITION.TOP_LEFT
+    })
+    return INVALID_MOVE
+  }
 
   G.cells[cell].occupied = ctx.currentPlayer;
 
