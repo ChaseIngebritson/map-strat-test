@@ -1,5 +1,3 @@
-import { Debug } from 'boardgame.io/debug';
-
 import SfBikeParkingData from './data/sf-bike-parking.json';
 import { createPlayer, placeUnit, moveUnit } from './utils'
     
@@ -40,9 +38,7 @@ const Game = {
     play: {
       moves: { moveUnit }
     }
-  },
-
-  debug: { impl: Debug }
+  }
 }
 
 export default Game
