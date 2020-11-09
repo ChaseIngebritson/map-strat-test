@@ -8,7 +8,7 @@ import { HexagonLayer } from '@deck.gl/aggregation-layers';
 
 import './Map.css';
 import { createScenegraphLayer } from '../../utils/layer'
-import { UNIT_PAWN_MODEL } from '../../constants/models'
+import { UNIT_PAWN_MODEL, UNIT_MODEL_MAP } from '../../constants/models'
 
 registerLoaders(GLTFLoader);
 
@@ -23,21 +23,7 @@ const INITIAL_VIEW_STATE = {
 };
 
 function Map (props) {
-  const [model1Coords, setModel1Coords] = useState([INITIAL_VIEW_STATE.longitude, INITIAL_VIEW_STATE.latitude]);
-  const [model2Coords, setModel2Coords] = useState([INITIAL_VIEW_STATE.longitude, INITIAL_VIEW_STATE.latitude]);
-
-  function setCoords (coords) {
-    switch (props.ctx.currentPlayer) {
-      case '0':
-        setModel1Coords(coords)
-        break
-      case '1':
-        setModel2Coords(coords)
-        break
-      default:
-        console.error('Unknown player')
-    }
-  }
+ const [pieces, setPieces] = useState([])
 
   const threeDLayer = {
     id: '3d-buildings',
@@ -84,18 +70,15 @@ function Map (props) {
     opacity: 0.3,
     getPosition: d => d.COORDINATES,
     onClick: (layer, $event) => {
-      console.log(layer)
-
       switch (props.ctx.phase) {
         case 'setup':
-          props.moves.placeUnit(layer.index)
+          props.moves.placeUnit(layer.object.position)
           break
         case 'play':
           // Replace with active unit functionality
           const activeUnit = Object.keys(props.G.players[props.ctx.currentPlayer].pieces)[0]
 
-          props.moves.moveUnit(activeUnit, layer.index)
-          setCoords(layer.object.position)
+          props.moves.moveUnit(activeUnit, layer.index, layer.object.position)
           break
         default:
           console.error('Unknown phase', props.ctx.phase)
@@ -105,25 +88,21 @@ function Map (props) {
     }
   };
 
-  // useEffect(() => {
-  //   props.G.players.map(player => {
-  //     return {
-        
-  //     }
-  //   })
-  // }, [props.G.players])
-
-  const model1 = createScenegraphLayer(
-    'duckObject1',
-    UNIT_PAWN_MODEL,
-    model1Coords, 30
-  )
-
-  const model2 = createScenegraphLayer(
-    'duckObject2',
-    UNIT_PAWN_MODEL,
-    model2Coords, 30
-  )
+  useEffect(() => {
+    const tempPieces = []
+    props.G.players.forEach(player => {
+      Object.values(player.pieces).forEach(piece => {
+        tempPieces.push(
+          createScenegraphLayer(
+            piece.id,
+            UNIT_MODEL_MAP[piece.type],
+            piece.coordinates, 30
+          )
+        )
+      })
+    })
+    setPieces(tempPieces)
+  }, [props.G.cells, props.G.players])
 
   return (
     <div className="Map">
@@ -135,8 +114,9 @@ function Map (props) {
             <Layer {...threeDLayer} />
           </ReactMapGL>
           <HexagonLayer  {...hexagonLayer} />
-          <ScenegraphLayer {...model1} coordinates={model1Coords} />
-          <ScenegraphLayer {...model2} coordinates={model2Coords} />
+          {pieces.map(piece => (
+            <ScenegraphLayer key={piece.id} {...piece} coordinates={piece.data[0].coordinates} />
+          ))}
         </DeckGL>
     </div>
   );
