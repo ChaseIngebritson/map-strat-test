@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DeckGL from '@deck.gl/react';
 import ReactMapGL, { Layer }  from 'react-map-gl';
 import { ScenegraphLayer } from '@deck.gl/mesh-layers'
@@ -8,6 +8,7 @@ import { HexagonLayer } from '@deck.gl/aggregation-layers';
 
 import './Map.css';
 import { createScenegraphLayer } from '../../utils/layer'
+import { UNIT_PAWN_MODEL } from '../../constants/models'
 
 registerLoaders(GLTFLoader);
 
@@ -83,10 +84,11 @@ function Map (props) {
     opacity: 0.3,
     getPosition: d => d.COORDINATES,
     onClick: (layer, $event) => {
+      console.log(layer)
+
       switch (props.ctx.phase) {
         case 'setup':
-          const test = props.moves.placeUnit(layer.index)
-          console.log(test)
+          props.moves.placeUnit(layer.index)
           break
         case 'play':
           // Replace with active unit functionality
@@ -103,15 +105,23 @@ function Map (props) {
     }
   };
 
+  // useEffect(() => {
+  //   props.G.players.map(player => {
+  //     return {
+        
+  //     }
+  //   })
+  // }, [props.G.players])
+
   const model1 = createScenegraphLayer(
     'duckObject1',
-    'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Binary/Duck.glb',
+    UNIT_PAWN_MODEL,
     model1Coords, 30
   )
 
   const model2 = createScenegraphLayer(
     'duckObject2',
-    'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Binary/Duck.glb',
+    UNIT_PAWN_MODEL,
     model2Coords, 30
   )
 

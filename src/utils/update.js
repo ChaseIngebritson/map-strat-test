@@ -3,8 +3,9 @@ import { INVALID_MOVE } from 'boardgame.io/core';
 
 import { UNIT_PAWN } from '../constants/units'
 
-function createPawn (cell) {
+function createPawn (id, cell) {
   return {
+    id,
     type: UNIT_PAWN,
     cell: cell
   }
@@ -12,7 +13,8 @@ function createPawn (cell) {
 
 function placeUnit (G, ctx, cell) {
   const currentPlayer = G.players[ctx.currentPlayer]
-  currentPlayer.pieces[uuidv4()] = createPawn(cell)
+  const id = uuidv4()
+  currentPlayer.pieces[id] = createPawn(id, cell)
 }
 
 function moveUnit (G, ctx, unit, cell) {
