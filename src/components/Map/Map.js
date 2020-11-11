@@ -9,8 +9,7 @@ import { HexagonLayer } from '@deck.gl/aggregation-layers';
 import { ToastContainer } from 'react-toastify';
 
 import { createScenegraphLayer, createIconLayer } from '../../utils/layer'
-import { UNIT_MODEL_MAP } from '../../constants/models'
-import { CLAIM_ICON } from '../../constants/icons' 
+import { UNIT_MODEL_MAP, CLAIM_ICON, PLAYER_COLOR_MAP } from '../../constants'
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -125,12 +124,13 @@ function Map (props) {
           </ReactMapGL>
           <HexagonLayer {...hexagonLayer} />
 
-          {props.G.players.map(player => {
+          {props.G.players.map((player, index) => {
             return player.claims.map(claim => {
               const iconLayer = createIconLayer(
                 `icon-${claim[0]},${claim[1]}`,
                 CLAIM_ICON,
                 ICON_MAPPING,
+                PLAYER_COLOR_MAP[index],
                 claim
               )
               

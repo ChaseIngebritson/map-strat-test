@@ -26,6 +26,7 @@ function createIconLayer (
   id,
   iconAtlas,
   iconMapping,
+  color,
   coordinates
 ) {
   return {
@@ -36,10 +37,11 @@ function createIconLayer (
     iconMapping,
     getIcon: d => 'marker',
     sizeScale: 15,
-    getPixelOffset: d => [0, -50],
+    sizeMaxPixels: 50,
+    getPixelOffset: d => [0, -40],
     getPosition: d => d.coordinates,
     getSize: d => 5,
-    getColor: d => [Math.sqrt(d.exits), 140, 0]
+    getColor: d => color
   }
 }
 
