@@ -6,6 +6,7 @@ function createPlayer (id) {
   return {
     id,
     pieces: {},
+    claims: [], 
     moveCount: 0
   }
 }

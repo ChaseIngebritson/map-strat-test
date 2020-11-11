@@ -1,11 +1,7 @@
 import SfBikeParkingData from './data/sf-bike-parking.json';
 import { createPlayer, placeUnit, moveUnit } from './utils'
     
-const data = SfBikeParkingData.map(locationIn => {
-  const location = { ...locationIn }
-  location.occupied = null
-  return location
-})
+const data = SfBikeParkingData
 
 const Game = {
   setup: (G) => {

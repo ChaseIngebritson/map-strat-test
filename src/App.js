@@ -9,6 +9,7 @@ import './App.css';
 const App = Client({ 
   game: Game,
   board: Map,
+  numPlayers: 2,
   debug: { impl: Debug }
 });
 

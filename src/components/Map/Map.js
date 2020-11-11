@@ -4,11 +4,13 @@ import ReactMapGL, { Layer }  from 'react-map-gl';
 import { ScenegraphLayer } from '@deck.gl/mesh-layers'
 import { GLTFLoader } from '@loaders.gl/gltf';
 import { registerLoaders } from '@loaders.gl/core';
+import { IconLayer } from '@deck.gl/layers';
 import { HexagonLayer } from '@deck.gl/aggregation-layers';
 import { ToastContainer } from 'react-toastify';
 
-import { createScenegraphLayer } from '../../utils/layer'
+import { createScenegraphLayer, createIconLayer } from '../../utils/layer'
 import { UNIT_MODEL_MAP } from '../../constants/models'
+import { CLAIM_ICON } from '../../constants/icons' 
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -24,6 +26,10 @@ const INITIAL_VIEW_STATE = {
   zoom: 15.5,
   bearing: -17.6,
   pitch: 45
+};
+
+const ICON_MAPPING = {
+  marker: {x: 0, y: 0, width: 128, height: 128, mask: true}
 };
 
 function Map (props) {
@@ -117,7 +123,21 @@ function Map (props) {
           <ReactMapGL mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}>
             <Layer {...threeDLayer} />
           </ReactMapGL>
-          <HexagonLayer  {...hexagonLayer} />
+          <HexagonLayer {...hexagonLayer} />
+
+          {props.G.players.map(player => {
+            return player.claims.map(claim => {
+              const iconLayer = createIconLayer(
+                `icon-${claim[0]},${claim[1]}`,
+                CLAIM_ICON,
+                ICON_MAPPING,
+                claim
+              )
+              
+              return <IconLayer key={`${claim[0]},${claim[1]}`} {...iconLayer} coordinates={claim} />
+            })
+          })}
+
           {pieces.map(piece => (
             <ScenegraphLayer key={piece.id} {...piece} coordinates={piece.data[0].coordinates} />
           ))}

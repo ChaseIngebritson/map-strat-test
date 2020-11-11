@@ -1,12 +1,12 @@
 function createScenegraphLayer (
-  layerId,
-  scenegraphModelUrl,
+  id,
+  scenegraph,
   coordinates,
   sizeScale
 ) {
   return {
-    id: layerId,
-    scenegraph: scenegraphModelUrl,
+    id,
+    scenegraph,
     data: [{ position: coordinates, size: 100 }],
     sizeScale,
     _lighting: 'pbr',
@@ -22,4 +22,25 @@ function createScenegraphLayer (
   }
 }
 
-export { createScenegraphLayer }
+function createIconLayer (
+  id,
+  iconAtlas,
+  iconMapping,
+  coordinates
+) {
+  return {
+    id,
+    data: [{ coordinates }],
+    pickable: true,
+    iconAtlas,
+    iconMapping,
+    getIcon: d => 'marker',
+    sizeScale: 15,
+    getPixelOffset: d => [0, -50],
+    getPosition: d => d.coordinates,
+    getSize: d => 5,
+    getColor: d => [Math.sqrt(d.exits), 140, 0]
+  }
+}
+
+export { createScenegraphLayer, createIconLayer }

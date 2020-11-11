@@ -1,9 +1,11 @@
 import { createPlayer, loadData } from './setup'
 import { createPawn, placeUnit, moveUnit } from './update'
-import { createScenegraphLayer } from './layer'
+import { createScenegraphLayer, createIconLayer } from './layer'
+import { includesCoords } from './map'
 
 export { 
   createPlayer, loadData, 
   createPawn, placeUnit, moveUnit, 
-  createScenegraphLayer 
+  createScenegraphLayer, createIconLayer,
+  includesCoords
 }
